@@ -15,11 +15,14 @@ const path = require('path');
 //__dirname == es siempre el directorio del archivo actual.
 const dir = 'C:/Users/kris_/Documents/5-P R O Y E C T O S/Data-Lovers_Project/DEV005-data-lovers'
 const file = 'README.md'
-const a = '/Data-Lovers_Project/DEV005-data-lovers/README.md';
 const files = fs.readdirSync(dir);
 
+let x = path.normalize('C:\Users\kris_\Documents\5-P R O Y E C T O S\Data-Lovers_Project');
+
+console.log('Normalizada: ',x);
+
 // convertir a absoluta la ruta dada
-const filePath = path.resolve(a); // resuelve un archivo
+const filePath = path.resolve(file); // resuelve un archivo
 const absolute = path.resolve(dir); // resuelve un directorio
 console.log('Ruta absoluta:', filePath);
 
