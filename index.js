@@ -1,72 +1,91 @@
-/* 
+/* eslint-disable import/no-extraneous-dependencies */
+/*
   cosas por hacer:
-  ✔ organizar mi bolerplate 
-  * Organizar funciones
-    * Normalizar ruta
-    * Validar si existe
-    * Convertir a absoluta
-  * Trabajar en agregar archivos md a un array
+  ✔ organizar mi bolerplate
+  ✔ Organizar funciones
+    ✔ Normalizar ruta
+    ✔ Validar si existe
+    ✔ Convertir a absoluta
+  ✔ Trabajar en agregar archivos md a un array
+  ✔ Implementar promesa a funcion leer archivo
+    * implementar markdown-it para obtener links
+    * utilizar fetch
   * Despues de que todo este más organizado, aventurate a testear algo
 */
 
 const fs = require('fs');
 const path = require('path');
+const markdownIt = require('markdown-it');
+const { JSDOM } = require('jsdom');
 
-//__dirname == es siempre el directorio del archivo actual.
-const dir = 'C:/Users/kris_/Documents/5-P R O Y E C T O S/Data-Lovers_Project/DEV005-data-lovers'
-const file = 'README.md'
-const files = fs.readdirSync(dir);
+const dir = 'C:/Users/kris_/Desktop/PruebasMD';
+// const readme = path.resolve('README.md');
 
-let x = path.normalize('C:\Users\kris_\Documents\5-P R O Y E C T O S\Data-Lovers_Project');
+const toAbsolute = (route) => path.resolve(route);
+const isFile = (route) => fs.statSync(route).isFile();
+const isDirectory = (route) => fs.statSync(route).isDirectory();
+const extensionMD = (route) => path.extname(route) === '.md';
 
-console.log('Normalizada: ',x);
-
-// convertir a absoluta la ruta dada
-const filePath = path.resolve(file); // resuelve un archivo
-const absolute = path.resolve(dir); // resuelve un directorio
-console.log('Ruta absoluta:', filePath);
-
-fs.statSync(dir, function (err, stats) { // comprueba que exista la ruta o archivo
-  console.log(`Is file: ${stats.isFile()}`); // comprueba si es directorio
-  console.log(`Is directory: ${stats.isDirectory()}`);
-  if (err == null) {
-    console.log('File or directory exists yeah!');
-  } else if (err.code === 'ENOENT') {
-    console.log('File or directory no exist :c');
-  } else {
-    console.log('Some other error: ', err.code);
+const searchMD = (route) => {
+  let mdFiles = [];
+  if (isFile(route) && extensionMD(route)) {
+    const absolute = toAbsolute(route);
+    mdFiles.push(absolute);
+  } else if (isDirectory(route)) {
+    const elements = fs.readdirSync(route);
+    elements.forEach((element) => {
+      const newRoute = path.join(route, element);
+      const newAbsolute = toAbsolute(newRoute);
+      mdFiles = mdFiles.concat(searchMD(newAbsolute));
+    });
   }
-});
+  return mdFiles;
+};
 
-// validamos si la ruta es absoluta o no
-console.log(path.isAbsolute(__dirname)); // true
-console.log(path.isAbsolute(absolute)); // true
-console.log(path.isAbsolute(file)); // false
-console.log(path.isAbsolute(filePath)); // true ?
+const getHTTPLinks = (file) => {
+  // eslint-disable-next-line new-cap
+  const md = new markdownIt();
+  const htmlContent = md.render(file);
+  const dom = new JSDOM(htmlContent);
+  const { document } = dom.window;
+  const links = document.querySelectorAll('a');
 
-/* const readingFile = ((file) => {
+  links.forEach((link) => {
+    const href = link.getAttribute('href');
+    if (href.startsWith('https')) console.log(href);
+  });
+};
+
+const readFile = ((file) => new Promise((resolve, reject) => {
   fs.readFile(file, 'utf-8', (error, data) => {
-    if (error) throw error;
-    console.log('\nReading file:');
-    console.log(data,'\n');
+    if (error) reject(error);
+    resolve(data, '\n');
+    getHTTPLinks(data);
+  });
+}));
+
+const getLinks = (files) => Promise.all(searchMD(files).map((file) => readFile(file)))
+  .then((results) => {
+    console.log('\n...reading\n', results);
   })
-}) */
+  .catch((error) => {
+    console.error(error);
+  });
 
-console.log("\nFilenames with the .md extensions:");;
-files.forEach(file => {
-  if (path.extname(file) === '.md') {
-    console.log('File: ', file);
-    console.log('Path: ', absolute);
-    console.log('Extension: ', path.extname(file));
-    console.log('Absolute Path: ', path.join(absolute, file));
-    // readingFile(path.join(absolute, file));
-  };
-});
-
-/* fs.readFile('file.txt', 'utf-8', (error, data) => {
-  if (error) throw error;
-  console.log(data,'\n');
-}) */
+const routeExists = (route) => {
+  fs.stat(route, (err) => {
+    if (err === null) {
+      console.log('Path exists yeah!');
+      console.log('Archivos con extensión .md:', searchMD(route));
+      console.log('Read files: ', getLinks(route));
+    } else if (err.code === 'ENOENT') {
+      console.log('File or directory no exist :c');
+    } else {
+      console.log('Some other error: ', err.code);
+    }
+  });
+};
+routeExists(dir);
 
 module.exports = () => {
 
