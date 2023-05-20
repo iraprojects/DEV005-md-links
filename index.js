@@ -8,7 +8,9 @@
   ✔ Trabajar en agregar archivos md a un array
   ✔ Implementar promesa a funcion leer archivo
     ✔ implementar markdown-it para obtener links
-    * utilizar fetch
+  * Mandar funciones a mdlnks
+    * Hacer validaciones
+    * retornar promesa
   * Despues de que todo este más organizado, aventurate a testear algo
 */
 
@@ -17,8 +19,9 @@ const path = require('path');
 const MarkdownIt = require('markdown-it');
 const { JSDOM } = require('jsdom');
 
-// const dir = 'C:/Users/kris_/Desktop/PruebasMD';
-// const readme = path.resolve('README.md');
+// node index.js 'C:/Users/kris_/Desktop/PruebasMD';
+// node index.js 'README.md';
+// node index.js C:/Users/kris_/Desktop/FolderNofiles
 
 const dir = process.argv[2];
 const toAbsolute = (route) => path.resolve(route);
@@ -73,10 +76,12 @@ const readFile = ((file) => new Promise((resolve, reject) => {
 const getLinks = (files) => Promise.all(searchMD(files).map((file) => readFile(file)))
   .then((results) => {
     // console.log(getHTTPLinks(results, files));
-    let arrObjMd = [];
+    /* let arrObjMd = [];
     results.forEach((element) => {
       arrObjMd = arrObjMd.concat(element);
-    });
+    }); */ // mi codigo sin refactorizar
+    // const arrObjMd = results.flatMap((element) => element); // ES2019
+    const arrObjMd = [].concat(...results); // ES6
     console.log(arrObjMd);
   })
   .catch((error) => {
@@ -90,7 +95,7 @@ const routeExists = (route) => {
       console.log('Archivos con extensión .md:', searchMD(route));
       console.log('Read files: ', getLinks(route));
     } else if (err.code === 'ENOENT') {
-      console.log('File or directory no exist :c');
+      console.log('Path no exist :c');
     } else {
       console.log('Some other error: ', err.code);
     }
