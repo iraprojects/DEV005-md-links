@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 /*
   cosas por hacer:
   ✔ organizar mi bolerplate
@@ -8,19 +7,20 @@
     ✔ Convertir a absoluta
   ✔ Trabajar en agregar archivos md a un array
   ✔ Implementar promesa a funcion leer archivo
-    * implementar markdown-it para obtener links
+    ✔ implementar markdown-it para obtener links
     * utilizar fetch
   * Despues de que todo este más organizado, aventurate a testear algo
 */
 
 const fs = require('fs');
 const path = require('path');
-const markdownIt = require('markdown-it');
+const MarkdownIt = require('markdown-it');
 const { JSDOM } = require('jsdom');
 
-const dir = 'C:/Users/kris_/Desktop/PruebasMD';
+// const dir = 'C:/Users/kris_/Desktop/PruebasMD';
 // const readme = path.resolve('README.md');
 
+const dir = process.argv[2];
 const toAbsolute = (route) => path.resolve(route);
 const isFile = (route) => fs.statSync(route).isFile();
 const isDirectory = (route) => fs.statSync(route).isDirectory();
@@ -42,31 +42,42 @@ const searchMD = (route) => {
   return mdFiles;
 };
 
-const getHTTPLinks = (file) => {
-  // eslint-disable-next-line new-cap
-  const md = new markdownIt();
-  const htmlContent = md.render(file);
+const getHTTPLinks = (data, file) => {
+  const newArray = [];
+  const md = new MarkdownIt();
+  const htmlContent = md.render(data);
   const dom = new JSDOM(htmlContent);
   const { document } = dom.window;
   const links = document.querySelectorAll('a');
 
   links.forEach((link) => {
     const href = link.getAttribute('href');
-    if (href.startsWith('https')) console.log(href);
+    if (href.startsWith('http')) {
+      newArray.push({
+        href,
+        text: link.textContent,
+        file,
+      });
+    }
   });
+  return newArray;
 };
 
 const readFile = ((file) => new Promise((resolve, reject) => {
   fs.readFile(file, 'utf-8', (error, data) => {
     if (error) reject(error);
-    resolve(data, '\n');
-    getHTTPLinks(data);
+    resolve(getHTTPLinks(data, file));
   });
 }));
 
 const getLinks = (files) => Promise.all(searchMD(files).map((file) => readFile(file)))
   .then((results) => {
-    console.log('\n...reading\n', results);
+    // console.log(getHTTPLinks(results, files));
+    let arrObjMd = [];
+    results.forEach((element) => {
+      arrObjMd = arrObjMd.concat(element);
+    });
+    console.log(arrObjMd);
   })
   .catch((error) => {
     console.error(error);
@@ -86,7 +97,6 @@ const routeExists = (route) => {
   });
 };
 routeExists(dir);
-
 module.exports = () => {
 
 };
