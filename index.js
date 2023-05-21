@@ -73,16 +73,22 @@ const readFile = ((file) => new Promise((resolve, reject) => {
   });
 }));
 
+const validate = (obj) => {
+  if (Object.entries(obj).length === 0) {
+    return console.log('Not links');
+  }
+  return console.log(obj);
+};
+
 const getLinks = (files) => Promise.all(searchMD(files).map((file) => readFile(file)))
   .then((results) => {
-    // console.log(getHTTPLinks(results, files));
     /* let arrObjMd = [];
     results.forEach((element) => {
       arrObjMd = arrObjMd.concat(element);
     }); */ // mi codigo sin refactorizar
     // const arrObjMd = results.flatMap((element) => element); // ES2019
     const arrObjMd = [].concat(...results); // ES6
-    console.log(arrObjMd);
+    validate(arrObjMd);
   })
   .catch((error) => {
     console.error(error);
@@ -91,17 +97,18 @@ const getLinks = (files) => Promise.all(searchMD(files).map((file) => readFile(f
 const routeExists = (route) => {
   fs.stat(route, (err) => {
     if (err === null) {
-      console.log('Path exists yeah!');
-      console.log('Archivos con extensión .md:', searchMD(route));
-      console.log('Read files: ', getLinks(route));
-    } else if (err.code === 'ENOENT') {
-      console.log('Path no exist :c');
-    } else {
-      console.log('Some other error: ', err.code);
+      return getLinks(route);
     }
+    return console.log('Path no exist :c');
   });
 };
-routeExists(dir);
-module.exports = () => {
+// const hello = (name) => console.log('Hello ', name);
 
+routeExists(dir);
+
+module.exports = {
+  dir,
+  toAbsolute,
+  getLinks,
+  routeExists,
 };
