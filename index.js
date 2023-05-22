@@ -1,19 +1,3 @@
-/*
-  cosas por hacer:
-  ✔ organizar mi bolerplate
-  ✔ Organizar funciones
-    ✔ Normalizar ruta
-    ✔ Validar si existe
-    ✔ Convertir a absoluta
-  ✔ Trabajar en agregar archivos md a un array
-  ✔ Implementar promesa a funcion leer archivo
-    ✔ implementar markdown-it para obtener links
-  * Mandar funciones a mdlnks
-    * Hacer validaciones
-    * retornar promesa
-  * Despues de que todo este más organizado, aventurate a testear algo
-*/
-
 const fs = require('fs');
 const path = require('path');
 const MarkdownIt = require('markdown-it');
@@ -23,7 +7,7 @@ const { JSDOM } = require('jsdom');
 // node index.js 'README.md';
 // node index.js C:/Users/kris_/Desktop/FolderNofiles
 
-const dir = process.argv[2];
+const dir = process.argv[2].replace(/\\/g, '/');
 const toAbsolute = (route) => path.resolve(route);
 const isFile = (route) => fs.statSync(route).isFile();
 const isDirectory = (route) => fs.statSync(route).isDirectory();
@@ -77,18 +61,18 @@ const validate = (obj) => {
   if (Object.entries(obj).length === 0) {
     return console.log('Not links');
   }
-  return console.log(obj);
+  return obj;
 };
 
-const getLinks = (files) => Promise.all(searchMD(files).map((file) => readFile(file)))
-  .then((results) => {
-    /* let arrObjMd = [];
+/* let arrObjMd = [];
     results.forEach((element) => {
       arrObjMd = arrObjMd.concat(element);
     }); */ // mi codigo sin refactorizar
-    // const arrObjMd = results.flatMap((element) => element); // ES2019
+// const arrObjMd = results.flatMap((element) => element); // ES2019
+/* const getLinks = (files) => Promise.all(searchMD(files).map((file) => readFile(file)))
+  .then((results) => {
     const arrObjMd = [].concat(...results); // ES6
-    validate(arrObjMd);
+    console.log(validate(arrObjMd));
   })
   .catch((error) => {
     console.error(error);
@@ -101,14 +85,11 @@ const routeExists = (route) => {
     }
     return console.log('Path no exist :c');
   });
-};
-// const hello = (name) => console.log('Hello ', name);
-
-routeExists(dir);
+}; */
 
 module.exports = {
   dir,
-  toAbsolute,
-  getLinks,
-  routeExists,
+  validate,
+  searchMD,
+  readFile,
 };
