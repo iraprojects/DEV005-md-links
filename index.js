@@ -64,32 +64,32 @@ const validate = (obj) => {
   return obj;
 };
 
-/* let arrObjMd = [];
-    results.forEach((element) => {
-      arrObjMd = arrObjMd.concat(element);
-    }); */ // mi codigo sin refactorizar
-// const arrObjMd = results.flatMap((element) => element); // ES2019
-/* const getLinks = (files) => Promise.all(searchMD(files).map((file) => readFile(file)))
-  .then((results) => {
-    const arrObjMd = [].concat(...results); // ES6
-    console.log(validate(arrObjMd));
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+const responseStatus = ((arr) => {
+  const fetchPromises = arr.map((e) => fetch(e.href)
+    .then((response) => {
+      if (response.ok) {
+        return ({
+          href: e.href, file: e.file, text: e.text, code: response.status, status: 'ok',
+        });
+      }
+      return ({
+        href: e.href, file: e.file, text: e.text, code: response.status, status: 'fail',
+      });
+    })
+    .catch((error) => console.log(`Error with the fetch request:${error.message}`)));
+  return Promise.all(fetchPromises);
+});
 
-const routeExists = (route) => {
-  fs.stat(route, (err) => {
-    if (err === null) {
-      return getLinks(route);
-    }
-    return console.log('Path no exist :c');
-  });
-}; */
+const getStatus = ((arr) => {
+  responseStatus(arr)
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
+});
 
 module.exports = {
   dir,
   validate,
   searchMD,
   readFile,
+  getStatus,
 };
