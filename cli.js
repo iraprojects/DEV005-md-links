@@ -1,4 +1,5 @@
 const { mdlinks, dir } = require('./md-links');
+const { getStatus } = require('./index');
 
 mdlinks(dir)
   .then((res) => {
@@ -6,6 +7,7 @@ mdlinks(dir)
       console.log('No links found');
     } else {
       console.log('Links:', res);
+      getStatus(res);
     }
   })
   .catch((error) => {
