@@ -1,4 +1,3 @@
-// const fs = require('fs');
 const {
   dir, searchMD, readFile, validate,
 } = require('./index');
