@@ -1,12 +1,12 @@
 const {
-  dir, searchMD, readFile, validate,
+  dir, searchMD, readFile, optionValidate,
 } = require('./index');
 
-const mdlinks = (path) => new Promise((resolve, reject) => {
+const mdlinks = (path, options) => new Promise((resolve, reject) => {
   Promise.all(searchMD(path).map((file) => readFile(file)))
     .then((results) => {
       const arrObjMd = [].concat(...results);
-      resolve(validate(arrObjMd));
+      resolve(optionValidate(arrObjMd, options));
     })
     .catch((error) => {
       console.log(':c', error);

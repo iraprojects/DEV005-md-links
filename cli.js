@@ -1,13 +1,13 @@
 const { mdlinks, dir } = require('./md-links');
-const { getStatus } = require('./index');
+// const { getStatus } = require('./index');
+const options = process.argv[3];
 
-mdlinks(dir)
+mdlinks(dir, options)
   .then((res) => {
-    if (res === undefined) {
+    if (res === null) {
       console.log('No links found');
     } else {
       console.log('Links:', res);
-      getStatus(res);
     }
   })
   .catch((error) => {

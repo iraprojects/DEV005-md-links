@@ -80,10 +80,23 @@ const responseStatus = ((arr) => {
   return Promise.all(fetchPromises);
 });
 
-const getStatus = ((arr) => {
+/* const getStatus = ((arr) => {
   responseStatus(arr)
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
+}); */
+
+const getStatus = (arr) => new Promise((resolve, reject) => {
+  responseStatus(arr)
+    .then((res) => resolve(res))
+    .catch((err) => reject(err));
+});
+
+const optionValidate = ((arr, options) => {
+  if (options === '--validate') {
+    return getStatus(arr);
+  }
+  return validate(arr);
 });
 
 module.exports = {
@@ -92,4 +105,8 @@ module.exports = {
   searchMD,
   readFile,
   getStatus,
+  isFile,
+  isDirectory,
+  getHTTPLinks,
+  optionValidate,
 };
