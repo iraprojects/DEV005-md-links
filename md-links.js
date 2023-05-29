@@ -1,5 +1,5 @@
 const {
-  dir, searchMD, readFile, optionValidate,
+  dir, searchMD, readFile, optionValidate, stats,
 } = require('./index');
 
 const mdlinks = (path, options) => new Promise((resolve, reject) => {
@@ -17,4 +17,5 @@ const mdlinks = (path, options) => new Promise((resolve, reject) => {
 module.exports = {
   mdlinks,
   dir,
+  stats,
 };

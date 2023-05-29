@@ -80,22 +80,46 @@ const responseStatus = ((arr) => {
   return Promise.all(fetchPromises);
 });
 
-/* const getStatus = ((arr) => {
-  responseStatus(arr)
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
-}); */
-
 const getStatus = (arr) => new Promise((resolve, reject) => {
   responseStatus(arr)
     .then((res) => resolve(res))
     .catch((err) => reject(err));
 });
 
+const stats = (arr) => new Promise((resolve, reject) => {
+  getStatus(arr)
+    .then((res) => {
+      const total = res.map((e) => e.href);
+      const broke = res.filter((e) => e.code !== 200);
+      const unique = new Set();
+      total.forEach((url) => unique.add(url));
+      resolve((`Total: ${total.length} Unique: ${unique.size} Broken: ${broke.length}`));
+    })
+    .catch((err) => reject(err));
+});
+
+/*
+let sameLinks = 0;
+      for (let i = 0; i < total.length - 1; i++) {
+        for (let j = i + 1; j < total.length - 1; j++) {
+          if (total[i] === total[j]) {
+            sameLinks += 2;
+          }
+        }
+      }
+      const unique = total.length - sameLinks;
+*/
+
 const optionValidate = ((arr, options) => {
-  if (options === '--validate') {
+  if (process.argv[3] === '--validate') {
+    Object.defineProperty(options, 'validate', {
+      value: true,
+    });
     return getStatus(arr);
   }
+  Object.defineProperty(options, 'validate', {
+    value: false,
+  });
   return validate(arr);
 });
 
@@ -109,4 +133,5 @@ module.exports = {
   isDirectory,
   getHTTPLinks,
   optionValidate,
+  stats,
 };
