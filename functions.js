@@ -66,17 +66,12 @@ const validate = (obj) => {
 
 const responseStatus = ((arr) => {
   const fetchPromises = arr.map((e) => fetch(e.href)
-    .then((response) => {
-      if (response.ok) {
-        return ({
-          href: e.href, file: e.file, text: e.text, code: response.status, status: 'ok',
-        });
-      }
-      return ({
-        href: e.href, file: e.file, text: e.text, code: response.status, status: 'fail',
-      });
-    })
-    .catch((error) => console.log(`Error with the fetch request:${error.message}`)));
+    .then((response) => ({
+      href: e.href, file: e.file, text: e.text, code: response.status, status: response.statusText,
+    }))
+    .catch((error) => ({
+      href: e.href, file: e.file, text: e.text, code: error.name, status: error.message,
+    })));
   return Promise.all(fetchPromises);
 });
 
@@ -90,37 +85,21 @@ const stats = (arr) => new Promise((resolve, reject) => {
   getStatus(arr)
     .then((res) => {
       const total = res.map((e) => e.href);
-      const broke = res.filter((e) => e.code !== 200);
       const unique = new Set();
       total.forEach((url) => unique.add(url));
-      resolve((`Total: ${total.length} Unique: ${unique.size} Broken: ${broke.length}`));
+      resolve((`Total: ${total.length} Unique: ${unique.size}`));
     })
     .catch((err) => reject(err));
 });
 
-/*
-let sameLinks = 0;
-      for (let i = 0; i < total.length - 1; i++) {
-        for (let j = i + 1; j < total.length - 1; j++) {
-          if (total[i] === total[j]) {
-            sameLinks += 2;
-          }
-        }
-      }
-      const unique = total.length - sameLinks;
-*/
-
-const optionValidate = ((arr, options) => {
-  if (process.argv[3] === '--validate') {
+const optionValidate = ((options, arg) => {
+  if (arg === '--validate') {
     Object.defineProperty(options, 'validate', {
       value: true,
     });
-    return getStatus(arr);
+    return true;
   }
-  Object.defineProperty(options, 'validate', {
-    value: false,
-  });
-  return validate(arr);
+  return false;
 });
 
 module.exports = {
@@ -134,4 +113,5 @@ module.exports = {
   getHTTPLinks,
   optionValidate,
   stats,
+  toAbsolute,
 };

@@ -1,8 +1,8 @@
-const { mdlinks, dir, stats } = require('./md-links');
+const {
+  mdlinks, dir, stats, optionValidate,
+} = require('./md-links');
 
-// const options = process.argv[3];
-const options = { validate: true };
-
+const options = { validate: false };
 mdlinks(dir, options)
   .then((res) => {
     if (res === null) {
@@ -11,8 +11,31 @@ mdlinks(dir, options)
       stats(res)
         .then((ress) => console.log(ress))
         .catch((err) => console.log(err));
+    } else if (optionValidate(options, process.argv[3]) && process.argv[4] === '--stats') {
+      stats(res)
+        .then((ress) => {
+          const broke = res.filter((e) => e.status !== 'OK');
+          console.log(`${ress} Broken: ${broke.length}`);
+        })
+        .catch((err) => console.log(err));
+    } else if (!options.validate) {
+      res.forEach((element) => {
+        console.log(`
+          href: ${element.href}
+          text: ${element.text}
+          file: ${element.file}
+        `);
+      });
     } else {
-      console.log('Links:', res);
+      res.forEach((element) => {
+        console.log(`
+          href: ${element.href}
+          text: ${element.text}
+          file: ${element.file}
+          code: ${element.code}
+          status: ${element.status}
+        `);
+      });
     }
   })
   .catch((error) => {
