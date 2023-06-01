@@ -12,8 +12,9 @@
 # install
 ``` npm i md-links-005```
 # usage
+
 ### Al ejecutar lo siguiente en la línea de comandos:
-``` mdlinks file.md --validate```
+``` mdlinks file.md```
 #### md-links retorna un conjunto de texto que contiene información correspondiente a cada link encontrado: 
 
 ``` href: https://es.wikipedia.org/wiki/Javascript
@@ -23,6 +24,22 @@
     href: https://nodejs.org/
     text: Node.js
     file: C:\Users\User\Files\Links.md
+```
+### Al ejecutar lo siguiente en la línea de comandos:
+``` mdlinks file.md --validate```
+#### md-links retorna un conjunto de texto que contiene información correspondiente al status de cada enlace: 
+
+``` href: https://es.wikipedia.org/wiki/Javascript
+    text: Javascript
+    file: C:\Users\User\Files\README.md
+    code: 200
+    status: OK 
+    
+    href: https://nodejs.org/
+    text: Node.js
+    file: C:\Users\User\Files\Links.md
+    code: 200
+    status: OK 
 ```
 ### Cuando ejecutamos:
 ``` mdlinks file.md --stats```

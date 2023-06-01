@@ -1,6 +1,6 @@
 {
   "name": "md-links-005",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "check the status of md format file links",
   "main": "./cli.js",
   "author": "@iraprojects",
