@@ -46,4 +46,4 @@ Total: 3 , Unique: 3, Broken: 1
 - [GithubProfile](https://github.com/iraprojects/)
 
 # Visual representation of the process: 
-![Flowchart](https://drive.google.com/file/d/1C-si86PcrJH_pZY09KDldgPgP1lGi9Y2/view?usp=sharing)
+![Flowchart](img/flujo.png)
