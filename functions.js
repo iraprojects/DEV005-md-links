@@ -3,10 +3,6 @@ const path = require('path');
 const MarkdownIt = require('markdown-it');
 const { JSDOM } = require('jsdom');
 
-// node index.js 'C:/Users/kris_/Desktop/PruebasMD';
-// node index.js 'README.md';
-// node index.js C:/Users/kris_/Desktop/FolderNofiles
-
 const dir = process.argv[2].replace(/\\/g, '/');
 const toAbsolute = (route) => path.resolve(route);
 const isFile = (route) => fs.statSync(route).isFile();

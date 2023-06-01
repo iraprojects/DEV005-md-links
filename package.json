@@ -1,9 +1,15 @@
 {
   "name": "md-links-005",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "check the status of md format file links",
   "main": "./cli.js",
   "author": "@iraprojects",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iraprojects/DEV005-md-links/tree/main"
+  },
+  "license": "ISC",
+  "homepage": "https://github.com/iraprojects/DEV005-md-links/tree/main#readme",
   "engines": {
     "node": ">=16.x"
   },
