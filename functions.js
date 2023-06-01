@@ -42,7 +42,7 @@ const getHTTPLinks = (data, file) => {
     if (href.startsWith('http')) {
       newArray.push({
         href,
-        text: link.textContent,
+        text: link.textContent.slice(0, 50),
         file,
       });
     }
@@ -87,7 +87,7 @@ const stats = (arr) => new Promise((resolve, reject) => {
       const total = res.map((e) => e.href);
       const unique = new Set();
       total.forEach((url) => unique.add(url));
-      resolve((`Total: ${total.length} Unique: ${unique.size}`));
+      resolve((`Total: ${total.length} | Unique: ${unique.size}`));
     })
     .catch((err) => reject(err));
 });

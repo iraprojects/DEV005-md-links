@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const {
   mdlinks, dir, stats, optionValidate,
 } = require('./md-links');
@@ -15,7 +16,7 @@ mdlinks(dir, options)
       stats(res)
         .then((ress) => {
           const broke = res.filter((e) => e.status !== 'OK');
-          console.log(`${ress} Broken: ${broke.length}`);
+          console.log(`${ress} | Broken: ${broke.length}`);
         })
         .catch((err) => console.log(err));
     } else if (!options.validate) {
