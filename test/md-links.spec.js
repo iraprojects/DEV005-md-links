@@ -139,7 +139,7 @@ describe('stats', () => {
       text: 'Github',
     },
   ];
-  const result = ('Total: 1 Unique: 1');
+  const result = ('Total: 1 | Unique: 1');
   it('should resolve stats', () => stats(arr).then((data) => {
     expect(data).toEqual(result);
   }));
