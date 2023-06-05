@@ -23,6 +23,3 @@ module.exports = {
   stats,
   optionValidate,
 };
-
-/*
-podrías probar expect(error).rejects.toEqual(ejemplo) */
