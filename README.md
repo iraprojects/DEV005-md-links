@@ -9,9 +9,9 @@
 
 * `Entrega de estadísticas:` La biblioteca también permite mostrar estadísticas relacionadas con la cantidad de enlaces totales, enlaces únicos y enlaces rotos.
 
-# install
+# instalación
 ``` npm i md-links-005```
-# usage
+# Modo de uso
 
 ### Al ejecutar lo siguiente en la línea de comandos:
 ``` mdlinks file.md```
@@ -56,11 +56,11 @@ Total: 3 , Unique: 3
 Total: 3 , Unique: 3, Broken: 1
 ```
 
-# Related
+# Relacionado
 - [md-links-sr](https://www.npmjs.com/package/md-links-sr)
 - [markdown-it](https://www.npmjs.com/package/markdown-it)
 # Mantainers 
 - [GithubProfile](https://github.com/iraprojects/)
 
-# Visual representation of the process: 
+# Digrama del flujo del proyecto: 
 ![Flowchart](img/flujo.png)
