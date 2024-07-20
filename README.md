@@ -1,4 +1,4 @@
-# Markdown Links 
+# Markdown Links. 
 #### md-links es una libreria para Node.js que facilita la lectura de archivos Markdown y la extracción de enlaces para verificar su estado en línea. Con esta libreria, puedes automatizar la tarea de comprobar la validez de los enlaces en tus documentos Markdown,
 
 #### Características clave:
